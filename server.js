@@ -15,12 +15,16 @@ const answers = [
     answer: "Jeg bor i Risskov.",
   },
   {
-    keywords: ["fritid", "hobby", "kan lide"],
+    keywords: ["fritid", "kan lide"],
     answer: "Jeg kan godt lide at læse, hækle og høre musik.",
   },
   {
     keywords: ["alder", "gammel"],
-    answers: ["Jeg er 26 år gammel."],
+    answer: "Jeg er 26 år gammel.",
+  },
+  {
+    keywords: ["farve"],
+    answer: "Min yndlingsfarve er grøn.",
   },
 ];
 
