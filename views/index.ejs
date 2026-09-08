@@ -8,7 +8,27 @@
 </head>
 <body>
 
-<div class="chat">
+<main class="page-layout">
+  <aside class="topic-stats">
+    <p class="eyebrow">Overblik</p>
+    <h2>Spørgsmål fordelt på emner</h2>
+    <ul>
+      <li>
+        <span>Navn</span>
+        <strong><%= topicStats.navn %></strong>
+      </li>
+      <li>
+        <span>Bosted</span>
+        <strong><%= topicStats.bosted %></strong>
+      </li>
+      <li>
+        <span>Fritid</span>
+        <strong><%= topicStats.fritid %></strong>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="chat">
 
   <h1>Spørg mig om hvad som helst</h1>
 
@@ -32,7 +52,10 @@
     <button type="submit">Send</button>
   </form>
 
-</div>
+  
+
+  </div>
+</main>
 
 </body>
 </html>
