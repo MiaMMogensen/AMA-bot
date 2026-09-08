@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AMAbot</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <h1>Spørg mig om hvad som helst</h1>
+
+    <form method="POST" action="/ask">
+      <label for="question">Stil mig et spørgsmål</label>
+      <input id="question" name="question" type="text" />
+      <button type="submit">Send</button>
+    </form>
+
+    <% for (const message of messages) { %>
+  <article class="<%= message.type %>">
+    <p><%= message.text %></p>
+  </article>
+<% } %>
+
+<% if (error) { %>
+  <p role="alert"><%= error %></p>
+<% } %>
+
+    <div id="answer"></div>
+
+  </body>
+</html>
