@@ -22,6 +22,10 @@
         <strong><%= topicStats.bosted %></strong>
       </li>
       <li>
+        <span>Hjemsted</span>
+        <strong><%= topicStats.hjemsted %></strong>
+      </li>
+      <li>
         <span>Fritid</span>
         <strong><%= topicStats.fritid %></strong>
       </li>
@@ -33,7 +37,14 @@
         <span>Farve</span>
         <strong><%= topicStats.farve %></strong>
       </li>
+      <li>
+        <span>Søskende</span>
+        <strong><%= topicStats.søskende %></strong>
+      </li>
     </ul>
+    <form method="POST" action="/clear-stats" class="chat-form">
+  <button type="submit">Nulstil statistik</button>
+</form>
   </aside>
 
   <div class="chat">
@@ -59,6 +70,10 @@
     <input id="question" name="question" type="text" autocomplete="off" />
     <button type="submit">Send</button>
   </form>
+
+  <form method="POST" action="/clear-messages" class="chat-form">
+  <button type="submit">Ryd beskeder</button>
+</form>
 
   
 

@@ -1,9 +1,28 @@
 import express from "express";
+import fs from "node:fs/promises";
 
 const app = express();
 const port = 3000;
 
-const messages = [];
+async function loadMessages() {
+  const data = await fs.readFile("./data/messages.json", "utf8");
+  return JSON.parse(data);
+}
+
+async function saveMessages(messages) {
+  const json = JSON.stringify(messages, null, 2);
+  await fs.writeFile("./data/messages.json", json);
+}
+
+async function loadTopicStats() {
+  const data = await fs.readFile("./data/topic-stats.json", "utf8");
+  return JSON.parse(data);
+}
+
+async function saveTopicStats(topicStats) {
+  const json = JSON.stringify(topicStats, null, 2);
+  await fs.writeFile("./data/topic-stats.json", json);
+}
 
 const answers = [
   {
@@ -13,8 +32,13 @@ const answers = [
   },
   {
     category: "bosted",
-    keywords: ["bor", "by", "fra"],
+    keywords: ["bor", "by"],
     answer: "Jeg bor i Risskov.",
+  },
+  {
+    category: "hjemsted",
+    keywords: ["hjem", "fra"],
+    answer: "Jeg kommer fra Lystrup.",
   },
   {
     category: "fritid",
@@ -31,15 +55,12 @@ const answers = [
     keywords: ["farve"],
     answer: "Min yndlingsfarve er grøn.",
   },
+  {
+    category: "søskende",
+    keywords: ["søskende"],
+    answer: "Jeg har 3 ældre søskende",
+  },
 ];
-
-const topicStats = {
-  navn: 0,
-  bosted: 0,
-  fritid: 0,
-  alder: 0,
-  farve: 0,
-};
 
 function countMatches(keywords, normalizedQuestion) {
   const matches = keywords.filter((keyword) =>
@@ -49,8 +70,12 @@ function countMatches(keywords, normalizedQuestion) {
   return matches.length;
 }
 
+function normalizeQuestion(question) {
+  return question.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 function findBestAnswer(question) {
-  const normalizedQuestion = question.toLowerCase();
+  const normalizedQuestion = normalizeQuestion(question);
   let bestScore = 0;
   let bestAnswer = "Det kender jeg ikke svaret på endnu.";
   let bestCategory = "";
@@ -96,11 +121,17 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
-app.get("/", (request, response) => {
+app.get("/", async (request, response) => {
+  const messages = await loadMessages();
+  const topicStats = await loadTopicStats();
+
   response.render("index", { messages, error: "", topicStats });
 });
 
-app.post("/ask", (request, response) => {
+app.post("/ask", async (request, response) => {
+  const messages = await loadMessages();
+  const topicStats = await loadTopicStats();
+
   const question = request.body.question.trim();
   let error = "";
 
@@ -117,7 +148,26 @@ app.post("/ask", (request, response) => {
     }
   }
 
+  await saveMessages(messages);
+  await saveTopicStats(topicStats);
+
   response.render("index", { messages, error, topicStats });
+});
+
+app.post("/clear-stats", async (request, response) => {
+  const topicStats = await loadTopicStats();
+
+  for (const category of Object.keys(topicStats)) {
+    topicStats[category] = 0;
+  }
+
+  await saveTopicStats(topicStats);
+  response.redirect("/");
+});
+
+app.post("/clear-messages", async (request, response) => {
+  await saveMessages([]);
+  response.redirect("/");
 });
 
 app.listen(port, () => {
